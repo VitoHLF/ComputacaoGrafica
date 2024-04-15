@@ -22,7 +22,7 @@ def makeSushi(x,y,id):
 
 def printSushis(sushiArr, correctOrder):
     for sushi in sushiArr:
-        if sushi.id == 1: sushiImg = sushiImg1
+        if sushi.id == 1: sushiImg = sushiImg1 
         if sushi.id == 2: sushiImg = sushiImg2
         if sushi.id == 3: sushiImg = sushiImg3
         if sushi.id == 4: sushiImg = sushiImg4
@@ -34,7 +34,7 @@ def printSushis(sushiArr, correctOrder):
         if not debugMode:
             for y in range(hSushi):
                     for x in range(wSushi):                
-                        if sushiImg[y,x][3] != 0 and 0<=(int(sushi.x + x - wSushi/2))<width and 0<=(int(sushi.y + y - hSushi/2))<height :
+                        if sushiImg[y,x][3] != 0 and 0<=(int(sushi.x + x - wSushi/2))<width and 0<=(int(sushi.y + y - hSushi/2))<height:
                             img[int(sushi.y + y - hSushi/2), int(sushi.x + x - wSushi/2)] = sushiImg[y,x][:3]
         else: cv2.circle(img,(sushi.x,sushi.y), 20, (40*sushi.id,40*sushi.id,40*sushi.id),-1)
 
@@ -80,13 +80,15 @@ random.seed(datetime.now().timestamp())
 
 SushisArr = []
 correctOrderArr = []
+currentHeldId = None
 #SushisArr.append(makeSushi(200,200,20,"1"))
 #SushisArr.append(makeSushi(400,400,25,"1"))
 
 playingState = True
 
-debugMode = True
-plateBounds1, plateBounds2 = None, None
+debugMode = False
+plateBounds1 = None
+plateBounds2 = None
 
 points = 0
 
@@ -125,14 +127,16 @@ while True:
     midPx, midPy = None, None 
     handLatched = False
 
+    plateBounds1 = (int(width/4),int(3/4 * height))
+    plateBounds2 = (int(3/4 * width),int(height))
+
     '''Lógica de jogo'''
     if playingState:
-        plateBounds1 = (int(width/4),int(height/2))
-        plateBounds2 = (int(3/4 * width),int(height * 3/4))
+        
         if len(SushisArr) == 0:
             for i in range(4):
-                posX = random.randint(int(width/8),int(7/8*width))
-                posY = random.randint(int(6*height/8),int(7*height/8))
+                posX = random.randint(int(width/4),int(3/4*width))
+                posY = random.randint(int(height/4),int(3/4 * height))
                 id = random.randint(1,6)
                 SushisArr.append(makeSushi(posX,posY,id))
             correctOrderArr = SushisArr
@@ -141,6 +145,7 @@ while True:
         if checkPlateOrder(SushisArr,correctOrderArr, plateBounds1, plateBounds2):
             points += 100
             SushisArr = []
+            currentHeldId = None
 
         
 
@@ -163,21 +168,26 @@ while True:
             else: handLatched = False
 
     '''Movimentação de objetos com base na detecção de clique'''       
-    for objeto in SushisArr:
-        if handLatched: #condição de clique
-            distC = np.sqrt((midPx-objeto.x)**2 + (midPy-objeto.y)**2)
-            if distC < 80 or objeto.isLatched:
-                objeto.isLatched = True
-                objeto.x = midPx
-                objeto.y = midPy
-                break
-        else: objeto.isLatched = False    
+    if handLatched: 
+        for idx in range(len(SushisArr)):
+            distC = np.sqrt((midPx-SushisArr[idx].x)**2 + (midPy-SushisArr[idx].y)**2)
+            if distC < 40:
+                currentHeldId = idx
+            
 
+    if handLatched and prevHandLatched and currentHeldId is not None:
+        distC = np.sqrt((midPx-SushisArr[currentHeldId].x)**2 + (midPy-SushisArr[currentHeldId].y)**2)
+        if distC < 100:
+            SushisArr[currentHeldId].x = midPx
+            SushisArr[currentHeldId].y = midPy
+
+
+
+    prevHandLatched = handLatched
     cTime = time.time()
     fps = 1/(cTime - pTime)
     pTime = cTime
 
-    prevHandLatched = handLatched
 
     cv2.putText(img, str(points), (int(width/2 - 50),70), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,255), 3)
 
