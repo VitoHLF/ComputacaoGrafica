@@ -1,0 +1,41 @@
+#VRML 2.0 utf8
+
+Transform{
+	translation -2 0 0
+
+	children[
+		Shape{
+			appearance Appearance{
+                material Material{
+				    diffuseColor 0 0 1
+                }
+			}
+			geometry IndexedFaceSet {
+				coord Coordinate{
+					point[  5 5 0, #0
+                            3 0 0, #1
+                            0 -1 0, #2
+                            0 1 0, #3
+                           -3 0 0, #4
+                           -5 5 0, #5
+                            0 3 3, #6
+                            0 3 -3, #7
+                            0 5 0#8
+
+                    ]
+				}
+				coordIndex[0,1,7,-1,
+                            1,2,7,-1,
+                            2,4,7,-1,
+                            4,5,7,-1,
+                            0,6,1,-1,
+                            1,6,3,-1,
+                            3,6,3,-1,
+                            4,6,5,-1,
+                            2,4,8,-1,
+                            2,8,1,-1
+                            ]
+			}
+		}
+	]
+}
