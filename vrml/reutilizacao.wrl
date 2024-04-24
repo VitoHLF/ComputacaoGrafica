@@ -1,0 +1,18 @@
+#VRML 2.0 utf8
+
+children[
+    DEF cubo Shape{
+        appearance Appearance{
+            material Material{
+                diffuseColor 1 0 0
+            }
+        }
+        geometry Box{
+            size 2 1 1
+        }
+    }
+]
+
+Shape{
+    USE cubo
+}
