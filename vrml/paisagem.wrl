@@ -141,6 +141,22 @@ Transform{
     translation 30 20 0
     USE arvore
 }
+Transform{
+    translation 0 30 0
+    USE arvore
+}
+Transform{
+    translation 10 30 0
+    USE arvore
+}
+Transform{
+    translation 20 30 0
+    USE arvore
+}
+Transform{
+    translation 30 30 0
+    USE arvore
+}
 
 
 Transform{ #lago
@@ -158,3 +174,81 @@ Transform{ #lago
         }
     }
 }
+
+Transform{
+
+children[
+Shape{ #estrada
+    appearance Appearance{
+        material Material{
+		    diffuseColor 0 0 0
+        }
+    }
+	geometry IndexedFaceSet {
+		coord Coordinate{
+			point[  
+                -50 40 0.1, #0
+                -50 50 0.1, #1
+                -40 50 0.1, #2
+                50 -40 0.1, #3
+                50 -50 0.1, #4
+                40 -50 0.1 #5
+            ]
+        }
+		coordIndex[
+            0,1,2,3,4,5,-1
+        ]
+	}
+}]
+
+DEF marca Transform{
+    translation 0 0 0.11
+    #rotation 0 0 1 1.57
+children[
+Transform{
+    rotation 0 0 1 0.785
+Shape{ #marca
+    appearance Appearance{
+        material Material{
+            diffuseColor 1 1 0}
+    }
+    geometry Box{
+        size 1 5 0.1
+    }
+}}]}
+
+Transform{
+    translation -10 10 0
+    USE marca
+}
+Transform{
+    translation -20 20 0
+    USE marca
+}
+Transform{
+    translation -30 30 0
+    USE marca
+}
+Transform{
+    translation -40 40 0
+    USE marca
+}
+Transform{
+    translation 10 -10 0
+    USE marca
+}
+Transform{
+    translation 20 -20 0
+    USE marca
+}
+Transform{
+    translation 30 -30 0
+    USE marca
+}
+Transform{
+    translation 40 -40 0
+    USE marca
+}
+
+}
+
